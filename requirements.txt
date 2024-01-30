@@ -3,3 +3,5 @@ scikit-learn
 tensorflow
 matplotlib
 plotly
+pyqt6
+pyqt6-tools
