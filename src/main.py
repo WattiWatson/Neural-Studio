@@ -5,7 +5,7 @@
 # Import modules
 import Model_Creator
 import Model_Loader
-import GUI
+import GUI_Link
 
 # Create iris model
 def create_iris_model(iris_model_path, neuron_count, hidden_layer_count, training_iterations, observation_count):

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="/eel.js"></script>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
     <title>Neural Network GUI</title>
     <style>
         .slider {
@@ -12,7 +11,7 @@
     </style>
 </head>
 <body>
-    <div id="network_visualization" style="width:100%; height:80vh; background-color: #f0f0f0;">
+    <div id="network_visualization" style="background-color: #f0f0f0;">
         <!-- Neural Network visualization will go here -->
     </div>
 
@@ -29,26 +28,8 @@
 
         <button id="train">Train</button>
     </div>
-    <script>
-        let neuronsSlider = document.getElementById("neurons");
-        let neuronsOutput = document.getElementById("neurons_val");
-        neuronsOutput.innerHTML = neuronsSlider.value;
-
-        neuronsSlider.oninput = function() {
-            neuronsOutput.innerHTML = this.value;
-        }
-
-        let layersSlider = document.getElementById("layers");
-        let layersOutput = document.getElementById("layers_val");
-        layersOutput.innerHTML = layersSlider.value;
-
-        layersSlider.oninput = function() {
-            layersOutput.innerHTML = this.value;
-        }
-
-        document.getElementById("train").addEventListener('click', async() => {
-            await eel.get_input_data(neuronsOutput.innerHTML, layersOutput.innerHTML);
-        })
-    </script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="/script.js"></script>
 </body>
 </html>
