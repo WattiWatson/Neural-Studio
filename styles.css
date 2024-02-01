@@ -1,3 +1,15 @@
+h1 {
+    text-align: center;
+    font-style: italic;
+}
+h6 {
+    color: #753C29;
+    text-align: right;
+}
+
+a:link {
+    color: #753C29;
+}
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,11 +19,11 @@ body {
 header {
     background-color: #753C29;
     color: #fff;
-    padding: 10px 0;
+    padding: 1px 0;
     text-align: center;
 }
 nav {
-    background-color: #753C29;
+    background-color: #7b3a24;
     color: #fff;
     text-align: center;
     padding: 10px 0;
@@ -28,11 +40,12 @@ img {
 	width: 50%;
 }
 main {
-    max-width: 80%;
+    color: black;
+    max-width: 65%;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
-    box-shadow: 2px 2px 15px rgba(0,0,0,0.1);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
 }
 .post {
     margin-bottom: 2em;
@@ -41,14 +54,13 @@ main {
     color: #333;
 }
 .post p {
-    line-height: 1.6;
+    line-height: 2;
 }
 footer {
-    background-color: #333;
-    color: #fff;
+    color: #333;
     text-align: center;
-    padding: 10px 0;
     position: fixed;
     width: 100%;
     bottom: 0;
 }
+  
