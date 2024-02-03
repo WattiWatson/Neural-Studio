@@ -63,5 +63,5 @@ def irisExample(hidden_layers, neurons, epochs):
     plt.plot(range(epochs), val_acc)
     plt.show()
     return(weights, val_acc, loss, accuracy, y_pred)
-irisExample(3, [10,12,10], 100)
+
 
