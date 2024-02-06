@@ -2,4 +2,4 @@ numpy
 scikit-learn
 tensorflow
 matplotlib
-plotly
+eel
