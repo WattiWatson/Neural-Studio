@@ -2,10 +2,11 @@
     JavaScript for site containing interface logic
 */
 
-// EXAMPLE
 // Define the dimensions of the SVG
-var width = 1100, height = 600;
-let factor = 2.5
+var width = 1100;
+var height = 600;
+
+// eel.get_screen_dimensions([width, height]);
 
 // Create the SVG
 var svg = d3.select("#network_visualization").append("svg")
@@ -18,14 +19,31 @@ var network = svg.append("g");
 // Create a drag behavior
 var translate = {x: 0, y: 0};
 var drag = d3.drag()
+    .on("start", function(event) {
+        event.sourceEvent.stopPropagation(); // silence other listeners
+    })
     .on("drag", function(event) {
-        translate.x += event.dx;
-        translate.y += event.dy;
-        network.attr("transform", "translate(" + translate.x + "," + translate.y + ")");
+        var currTransform = d3.zoomTransform(network.node());
+        currTransform.x += event.dx;
+        currTransform.y += event.dy;
+        network.attr("transform", currTransform);
     });
 
 // Apply the drag behavior to the SVG
 svg.call(drag);
+
+// Create a zoom behavior
+var zoom = d3.zoom()
+    .scaleExtent([0.1, 10]) // This defines the minimum and maximum zoom scale.
+    .translateExtent([[0, 0], [width, height]]) // This restricts panning to within the SVG.
+    .on("zoom", function(event) {
+        var currTransform = d3.zoomTransform(network.node());
+        currTransform.k = event.transform.k;
+        network.attr("transform", currTransform);
+    });
+
+// Apply the zoom behavior to the zoomGroup
+svg.call(zoom);
 
 // Function to update the network
 function updateNetwork() {
@@ -43,7 +61,7 @@ function updateNetwork() {
     var inputNeurons = d3.range(2).map(function(d, i) {
         return {x: gap, y: height / 3 * (i + 1)};
     });
-
+    
     // Create the hidden layers
     var layers = d3.range(numLayers).map(function(d, i) {
         return d3.range(numNeurons).map(function(d, j) {
@@ -58,10 +76,10 @@ function updateNetwork() {
         if (numLayers === 1) {
             xPos = 3 * gap;
         } else {
-            xPos = width - gap;
+            xPos = layers[numLayers - 1][0].x + gap; // Use the x position of the last neuron in the last layer
         }
         return {x: xPos, y: height / 3 * (i + 1)};
-    });    
+    });   
 
     // Create the links
     var links = [];
@@ -70,13 +88,13 @@ function updateNetwork() {
             // Connect to the previous layer or input neurons
             var source = i === 0 ? inputNeurons : layers[i - 1];
             source.forEach(function(srcNeuron) {
-                links.push({source: srcNeuron, target: neuron});
+                links.push({ source: srcNeuron, target: neuron, weight: 0.4 });
             });
 
             // Connect to the next layer or output neurons
             var target = i === layers.length - 1 ? outputNeurons : layers[i + 1];
             target.forEach(function(tgtNeuron) {
-                links.push({source: neuron, target: tgtNeuron});
+                links.push({ source: neuron, target: tgtNeuron, weight: 0.4 });
             });
         });
     });
@@ -90,7 +108,10 @@ function updateNetwork() {
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; })
-        .style("stroke", "black");
+        .style("stroke", "gray")
+        .style("stroke-width", function(d) {
+            return d.weight;
+        });
 
     // Create the circles for the neurons
     network.selectAll(".neuron")
@@ -107,11 +128,6 @@ d3.selectAll("#neurons, #layers, #train").on("input", updateNetwork);
 
 // Initial update
 updateNetwork();
-
-
-
-
-
 
 // Get neuron slider
 let neuronsSlider = document.getElementById("neurons");
