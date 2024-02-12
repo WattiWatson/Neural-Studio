@@ -1,4 +1,5 @@
 import GUI_Linker as GUI
+import numpy as np
 
 class Neural_Studio:
     def generateNeuronArray(self, hidden_layer_count, neuron_count):
@@ -17,4 +18,14 @@ if __name__ == "__main__":
     NS = Neural_Studio()
     
     NS.startApplication()
-    # iris_weights, iris_val_acc, iris_loss, iris_accuracy, iris_y_pred = NS.buildIrisModel(hidden_layers,neurons,epochs)
+    
+    # Print weights dictionary
+    # iris_weights, iris_val_acc, iris_loss, iris_accuracy, iris_y_pred = NS.buildIrisModel(2,2,70)
+    # print(f"\n\n\n{iris_weights}\n\n\n")
+    # for key in iris_weights:
+    #     if(not(str(key).startswith("bias"))):
+    #         weight_shape = np.shape(iris_weights[key])
+    #         # Exclude the epoch count in output
+    #         print(f"{str(key)} shape: {str(weight_shape[0])}, {str(weight_shape[1])}")
+
+    # NS.startApplication()

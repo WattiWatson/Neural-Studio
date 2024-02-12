@@ -10,7 +10,7 @@ NS = main.Neural_Studio()
 
 @eel.expose
 def triggerBuildIrisModel(hidden_layers, neurons):
-    weights, val_acc, loss, accuracy, y_pred = NS.buildIrisModel(hidden_layers, neurons, 10) # training_epochs
+    weights, val_acc, loss, accuracy, y_pred = NS.buildIrisModel(hidden_layers, neurons, 100) # training_epochs
     return weights, val_acc, loss, accuracy, y_pred
 
 def loadFrontend():
