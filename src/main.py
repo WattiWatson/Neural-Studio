@@ -19,13 +19,17 @@ if __name__ == "__main__":
     
     NS.startApplication()
     
+    n = 2
+    hl = 2
     # Print weights dictionary
-    # iris_weights, iris_val_acc, iris_loss, iris_accuracy, iris_y_pred = NS.buildIrisModel(2,2,70)
-    # print(f"\n\n\n{iris_weights}\n\n\n")
-    # for key in iris_weights:
+    # weights, iris_val_acc, iris_loss, iris_accuracy, iris_y_pred = NS.buildIrisModel(hl,n,100)
+    # for key in weights:
     #     if(not(str(key).startswith("bias"))):
-    #         weight_shape = np.shape(iris_weights[key])
+    #         weight_shape = np.shape(weights[key])
+    #         last_weights = weights[key][:, :, -1]
+    #         # avg_weight = np.mean(last_weights)
     #         # Exclude the epoch count in output
-    #         print(f"{str(key)} shape: {str(weight_shape[0])}, {str(weight_shape[1])}")
-
-    # NS.startApplication()
+    #         print(f"{str(key)} | shape: {str(weight_shape[0])}, {str(weight_shape[1])} | last weights: {last_weights}")
+            
+    # num_of_edges = (4 * n) + ((hl - 1) * (n * n)) + (3 * n)
+    # print(f"\nNumber of Edges {num_of_edges}\n")

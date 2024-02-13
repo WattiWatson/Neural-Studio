@@ -35,41 +35,36 @@ def build_model(hidden_layers, neurons):
     model.add(Dense(3, activation='softmax'))  # output layer
     return model
 
+# TODO Review val_accuracy, seems to not change after first couple epoch
 def train_model(model, X_train, y_train, X_val, y_val, epochs):
     val_acc = []
-    weights_dict = {}
+    weight_dict = {}
     model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.001), metrics=['accuracy'])
     
     class validationAccuracy(keras.callbacks.Callback):
-        def __init__(self):
-            self.val_acc = val_acc
-            self.weight_dict = weights_dict
-            
         # Runs at the end of each epoch
         def on_epoch_end(self, epoch, logs=None):
-            self.val_acc.append(logs['val_accuracy'])
-            # weights.append(model.get_weights())
+            val_acc.append(logs['val_accuracy'])
             
             for layer in range(len(self.model.layers)):
                 # Weights
-                w = self.model.layers[layer].get_weights()[0]
+                w = model.layers[layer].get_weights()[0]
                 # Bias
-                b = self.model.layers[layer].get_weights()[1]
-                print(f"Layer {layer} has weights of shape {np.shape(w)} and biases of shape {np.shape(b)}")
+                # b = self.model.layers[layer].get_weights()[1]
+                # print(f"Layer {layer} has weights of shape {np.shape(w)}")
                 
-                # Save weights and biases to dictionary
-                if epoch == 0:
-                    # Create new array to hold weights and biases
-                    self.weight_dict[f"weight_{str(layer+1)}"] = w
-                    self.weight_dict[f"bias_{str(layer+1)}"] = b
-                else:
-                    # Append new weights to new 
-                    self.weight_dict[f"weight_{str(layer+1)}"] = np.dstack((self.weight_dict[f"weight_{str(layer+1)}"], w))
-                    self.weight_dict[f"bias_{str(layer+1)}"] = np.dstack((self.weight_dict[f"bias_{str(layer+1)}"], b))
+                for neuron in range(len(w)):
+                    # Save weights and biases to dictionary
+                    if epoch == 0:
+                        # Create new array to hold weights and biases
+                        weight_dict[f"weight_{str(layer+1)}_{str(neuron+1)}"] = w[neuron]
+                    else:
+                        # Append new weights to existing array
+                        weight_dict[f"weight_{str(layer+1)}_{str(neuron+1)}"] = np.dstack((weight_dict[f"weight_{str(layer+1)}_{str(neuron+1)}"], w[neuron]))
 
     validation_accuracy = validationAccuracy()
     model.fit(X_train, y_train, epochs=epochs, validation_data=(X_val, y_val), callbacks=[validation_accuracy])
-    return val_acc, weights_dict
+    return val_acc, weight_dict
 
 def evaluate_model(model, X_test, y_test):
     y_pred = model.predict(X_test)
@@ -83,13 +78,17 @@ def plot_results(val_acc, epochs):
     plt.plot(range(epochs), val_acc)
     plt.show()
     
-def normalize_weights(weights):
-    # Flatten all weights and concatenate into a single array
-    flattened_weights = np.concatenate([w.flatten() for layer_weights in weights for w in layer_weights])
-    # Normalize weights to range [0, 1]
-    normalized_weights = (flattened_weights - np.min(flattened_weights)) / (np.max(flattened_weights) - np.min(flattened_weights))
-    print(weights)
-    return normalized_weights
+# TODO This needs to just return the weights for the n number of edges. Currently returning much more (18 edges => 34 weights)
+def get_last_weights(weights):
+    strengthArray = []
+    for key in weights:
+        if(not(str(key).startswith("bias"))):
+            # Get the weights from the last epoch
+            last_weights = weights[key][:, :, -1]
+            for lw in last_weights:
+                for w in lw:
+                    strengthArray.append(float(w))
+    return strengthArray
 
 def buildModel(hidden_layers, neurons, epochs):
     X, y = load_data()
@@ -98,4 +97,4 @@ def buildModel(hidden_layers, neurons, epochs):
     val_acc, weights = train_model(model, X_train, y_train, X_val, y_val, epochs)
     y_pred, loss, accuracy = evaluate_model(model, X_test, y_test)
     # plot_results(val_acc, epochs)
-    return weights, val_acc, loss, accuracy, y_pred
+    return get_last_weights(weights), val_acc, loss, accuracy, y_pred

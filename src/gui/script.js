@@ -11,6 +11,8 @@ var numInputNeurons = 4;
 var numOutputNeurons = 3;
 // Set the initial zoom level of visual
 var initialZoom = 0.5;
+// Initial edge color
+edgeColor = "gray";
 
 // Create the SVG
 var svg = d3.select("#network_visualization").append("svg")
@@ -85,46 +87,47 @@ function updateNetwork() {
         }
         return {x: xPos, y: (height - (numOutputNeurons - 1) * gap) / 2 + i * gap, color: "red"};
     });
- 
 
     // LINKS //
 
-    // Calculate the number of links between the input layer and the first layer
-    var numLinks = 2 * numNeurons; 
-    // Calculate the number of links between each pair of layers
-    numLinks += (numLayers - 1) * numNeurons * numNeurons; 
-    // Calculate the number of links between the last layer and the output layer
-    numLinks += 2 * numNeurons;
+    // Calculate the number of links
+    numLinks = (4 * numNeurons) + ((numLayers - 1) * (numNeurons * numNeurons)) + (3 * numNeurons)
 
     console.log("Number of links: " + numLinks);
 
     // Keep track of the current thickness value
     var thicknessIndex = 0;
 
+    // TODO: Figure out how to make this use only the first n elements of the array where n = numLinks so all links have values
     // Create the links
+    console.log("Thicknesses length: " + thicknesses.length);
+    console.log("Thicknesses: " + thicknesses);
     var links = [];
     layers.forEach(function(layer, i) {
         layer.forEach(function(neuron, j) {
             var source = i === 0 ? inputNeurons : layers[i - 1];
             if(thicknesses.length != 0) {
-                console.log("Thicknesses is not empty!");
                 source.forEach(function(srcNeuron) {
-                    links.push({ source: srcNeuron, target: neuron, weight: thicknesses[thicknessIndex++] });
+                    currWeight = thicknesses[thicknessIndex++];
+                    if(currWeight < 0) { edgeColor = "red" } else { edgeColor = "blue" }
+                    links.push({ source: srcNeuron, target: neuron, weight: Math.abs(currWeight), color: edgeColor });
                 });
             } else {
                 source.forEach(function(srcNeuron) {
-                    links.push({ source: srcNeuron, target: neuron, weight: initialThickness });
+                    links.push({ source: srcNeuron, target: neuron, weight: initialThickness, color: "gray" });
                 });
             }
 
             var target = i === layers.length - 1 ? outputNeurons : layers[i + 1];
             if(thicknesses.length != 0) {
                 target.forEach(function(tgtNeuron) {
-                    links.push({ source: neuron, target: tgtNeuron, weight: thicknesses[thicknessIndex++] });
+                    currWeight = thicknesses[thicknessIndex++];
+                    if(currWeight < 0) { edgeColor = "red" } else { edgeColor = "blue" }
+                    links.push({ source: neuron, target: tgtNeuron, weight: Math.abs(currWeight), color: edgeColor });
                 });
             } else {
                 target.forEach(function(tgtNeuron) {
-                    links.push({ source: neuron, target: tgtNeuron, weight: initialThickness });
+                    links.push({ source: neuron, target: tgtNeuron, weight: initialThickness, color: "gray" });
                 });
             }
         });
@@ -139,7 +142,9 @@ function updateNetwork() {
     .attr("y1", function(d) { return d.source.y; })
     .attr("x2", function(d) { return d.target.x; })
     .attr("y2", function(d) { return d.target.y; })
-    .style("stroke", "gray")
+    .style("stroke", function(d) {
+        return d.color;    
+    })
     .style("stroke-width", function(d) {
         return d.weight;
     });
@@ -196,16 +201,20 @@ layersSlider.oninput = function() {
     layersOutput.innerHTML = this.value;
 }
 
-function getIrisModelOutput(weights, val_acc, loss, accuracy, y_pred) {
-    thicknesses = weights;
-}
-
-// When train button is clicked, run python function passed with the values from sliders
-document.getElementById("train").onclick = function() {
-    eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML))(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
+function getIrisModelOutput(weights, num_of_links) {
+    thicknesses = []
+    numLinks = num_of_links
+    console.log(weights)
+    for(let w of weights) {
+        thicknesses.push(parseFloat(w));
+    }
     updateNetwork();
 }
 
+// When train button is clicked, run python function passed with the values from sliders
+document.getElementById("train").onclick = async function() {
+    await eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML))(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
+}
+
 // Initial update
-//refreshVisual();
 updateNetwork();
