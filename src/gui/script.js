@@ -3,8 +3,8 @@
 */
 
 // Define the dimensions of the SVG
-var width = 1100;
-var height = 600;
+var width = 1300;
+var height = 800;
 var initialThickness = 0.4;
 var thicknesses = [];
 var numInputNeurons = 4;
@@ -98,38 +98,39 @@ function updateNetwork() {
     // Keep track of the current thickness value
     var thicknessIndex = 0;
 
-    // TODO: Figure out how to make this use only the first n elements of the array where n = numLinks so all links have values
     // Create the links
     console.log("Thicknesses length: " + thicknesses.length);
-    console.log("Thicknesses: " + thicknesses);
     var links = [];
-    layers.forEach(function(layer, i) {
-        layer.forEach(function(neuron, j) {
-            var source = i === 0 ? inputNeurons : layers[i - 1];
-            if(thicknesses.length != 0) {
-                source.forEach(function(srcNeuron) {
-                    currWeight = thicknesses[thicknessIndex++];
-                    if(currWeight < 0) { edgeColor = "red" } else { edgeColor = "blue" }
-                    links.push({ source: srcNeuron, target: neuron, weight: Math.abs(currWeight), color: edgeColor });
-                });
-            } else {
-                source.forEach(function(srcNeuron) {
-                    links.push({ source: srcNeuron, target: neuron, weight: initialThickness, color: "gray" });
-                });
-            }
+    outputNeurons.forEach(function(neuron) {
+        var source = neuron;
+        var targetLayer = layers[layers.length - 1];
+        targetLayer.forEach(function(targetNeuron) {
+            var currWeight = thicknessIndex < thicknesses.length ? thicknesses[thicknessIndex++] : initialThickness;
+            var edgeColor = currWeight < 0 ? "red" : "blue";
+            links.push({ source: source, target: targetNeuron, weight: Math.abs(currWeight), color: edgeColor });
+        });
+    });
 
-            var target = i === layers.length - 1 ? outputNeurons : layers[i + 1];
-            if(thicknesses.length != 0) {
-                target.forEach(function(tgtNeuron) {
-                    currWeight = thicknesses[thicknessIndex++];
-                    if(currWeight < 0) { edgeColor = "red" } else { edgeColor = "blue" }
-                    links.push({ source: neuron, target: tgtNeuron, weight: Math.abs(currWeight), color: edgeColor });
-                });
-            } else {
-                target.forEach(function(tgtNeuron) {
-                    links.push({ source: neuron, target: tgtNeuron, weight: initialThickness, color: "gray" });
-                });
-            }
+    for (var i = layers.length - 1; i > 0; i--) {
+        var layer = layers[i];
+        var prevLayer = layers[i - 1];
+        layer.forEach(function(neuron) {
+            var source = neuron;
+            prevLayer.forEach(function(targetNeuron) {
+                var currWeight = thicknessIndex < thicknesses.length ? thicknesses[thicknessIndex++] : initialThickness;
+                var edgeColor = currWeight < 0 ? "red" : "blue";
+                links.push({ source: source, target: targetNeuron, weight: Math.abs(currWeight), color: edgeColor });
+            });
+        });
+    }
+
+    inputNeurons.forEach(function(neuron) {
+        var source = neuron;
+        var targetLayer = layers[0];
+        targetLayer.forEach(function(targetNeuron) {
+            var currWeight = thicknessIndex < thicknesses.length ? thicknesses[thicknessIndex++] : initialThickness;
+            var edgeColor = currWeight < 0 ? "red" : "blue";
+            links.push({ source: source, target: targetNeuron, weight: Math.abs(currWeight), color: edgeColor });
         });
     });
 
@@ -148,6 +149,8 @@ function updateNetwork() {
     .style("stroke-width", function(d) {
         return d.weight;
     });
+
+    console.log("Links drawn: " + links.length);
 
     // Create a tooltip
     var tooltip = d3.select("body").append("div")

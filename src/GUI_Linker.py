@@ -13,12 +13,12 @@ def triggerBuildIrisModel(hidden_layers, neurons):
     weights, val_acc, loss, accuracy, y_pred = NS.buildIrisModel(hidden_layers, neurons, 100) # training_epochs
     return weights
 
-def loadFrontend():
+def loadFrontend(width, height):
     try:
-        eel.start("index.html", size=(1200, 800))
+        eel.start("index.html", size=(width, height))
     except EnvironmentError:
         # If Chrome isn't found, fallback to Microsoft Edge
         if sys.platform in ['win32', 'win64'] and int(platform.release()) >= 10:
-            eel.start("index.html", size=(1200, 800), mode='edge')
+            eel.start("index.html", size=(width, height), mode='edge')
         else:
             raise

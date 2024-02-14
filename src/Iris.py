@@ -1,5 +1,8 @@
 from sklearn import datasets
 import numpy as np
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import Dense
@@ -8,9 +11,6 @@ from keras.utils import to_categorical
 import matplotlib.pyplot as plt
 import keras.callbacks
 from sklearn.metrics import confusion_matrix
-import os
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 def load_data():
@@ -35,11 +35,10 @@ def build_model(hidden_layers, neurons):
     model.add(Dense(3, activation='softmax'))  # output layer
     return model
 
-# TODO Review val_accuracy, seems to not change after first couple epoch
 def train_model(model, X_train, y_train, X_val, y_val, epochs):
     val_acc = []
     weight_dict = {}
-    model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.001), metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
     
     class validationAccuracy(keras.callbacks.Callback):
         # Runs at the end of each epoch
@@ -78,7 +77,6 @@ def plot_results(val_acc, epochs):
     plt.plot(range(epochs), val_acc)
     plt.show()
     
-# TODO This needs to just return the weights for the n number of edges. Currently returning much more (18 edges => 34 weights)
 def get_last_weights(weights):
     strengthArray = []
     for key in weights:

@@ -11,13 +11,13 @@ class Neural_Studio:
         weights, val_acc, loss, accuracy, y_pred = Iris.buildModel(hidden_layer_count, neuron_array, training_epochs_count) # hidden_layers, neurons, training_epcohs
         return weights, val_acc, loss, accuracy, y_pred
     
-    def startApplication(self):
-        GUI.loadFrontend()
+    def startApplication(self, width, height):
+        GUI.loadFrontend(width, height)
 
 if __name__ == "__main__":
     NS = Neural_Studio()
     
-    NS.startApplication()
+    NS.startApplication(1400,1000)
     
     n = 2
     hl = 2
