@@ -41,7 +41,7 @@ def mnistExample(hidden_layers, neurons, epochs):
 
     #a convolutional layer and maxpooling layer is added based on the number of hidden layers passed to the function
     for layer in range(hidden_layers):
-        model.add(layers.Conv2D(neurons, kernel_size=(3, 3), activation='relu'))
+        model.add(layers.Conv2D(neurons[layer], kernel_size=(3, 3), activation='relu'))
         model.add(layers.MaxPooling2D(pool_size=(2, 2)))
     #Convolutional output is flattened and passed through a fully connected layer
     model.add(layers.Flatten())
