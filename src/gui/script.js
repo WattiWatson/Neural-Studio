@@ -9,8 +9,10 @@ var initialThickness = 0.4;
 var thicknesses = [];
 var numInputNeurons = 4;
 var numOutputNeurons = 3;
+
 // Set the initial zoom level of visual
 var initialZoom = 0.5;
+
 // Initial edge color
 edgeColor = "gray";
 
@@ -66,7 +68,7 @@ function updateNetwork() {
 
     // Create the input neurons
     var inputNeurons = d3.range(numInputNeurons).map(function(d, i) {
-        return {x: gap, y: (height - (numInputNeurons - 1) * gap) / 2 + i * gap, color: "blue"};
+        return {x: gap, y: (height - (numInputNeurons - 1) * gap) / 2 + i * gap, color: "green"};
     });
 
     // Create the hidden layers
@@ -85,13 +87,13 @@ function updateNetwork() {
         } else {
             xPos = layers[numLayers - 1][0].x + gap; // Use the x position of the last neuron in the last layer
         }
-        return {x: xPos, y: (height - (numOutputNeurons - 1) * gap) / 2 + i * gap, color: "red"};
+        return {x: xPos, y: (height - (numOutputNeurons - 1) * gap) / 2 + i * gap, color: "orange"};
     });
 
     // LINKS //
 
     // Calculate the number of links
-    numLinks = (4 * numNeurons) + ((numLayers - 1) * (numNeurons * numNeurons)) + (3 * numNeurons)
+    numLinks = (4 * numNeurons) + ((numLayers - 1) * (numNeurons * numNeurons)) + (3 * numNeurons);
 
     console.log("Number of links: " + numLinks);
 
@@ -106,7 +108,7 @@ function updateNetwork() {
         var targetLayer = layers[layers.length - 1];
         targetLayer.forEach(function(targetNeuron) {
             var currWeight = thicknessIndex < thicknesses.length ? thicknesses[thicknessIndex++] : initialThickness;
-            var edgeColor = currWeight < 0 ? "red" : "blue";
+            var edgeColor = thicknesses.length > 0 ? (currWeight < 0 ? "red" : "blue") : "gray";
             links.push({ source: source, target: targetNeuron, weight: Math.abs(currWeight), color: edgeColor });
         });
     });
@@ -118,7 +120,7 @@ function updateNetwork() {
             var source = neuron;
             prevLayer.forEach(function(targetNeuron) {
                 var currWeight = thicknessIndex < thicknesses.length ? thicknesses[thicknessIndex++] : initialThickness;
-                var edgeColor = currWeight < 0 ? "red" : "blue";
+                var edgeColor = thicknesses.length > 0 ? (currWeight < 0 ? "red" : "blue") : "gray";
                 links.push({ source: source, target: targetNeuron, weight: Math.abs(currWeight), color: edgeColor });
             });
         });
@@ -129,7 +131,7 @@ function updateNetwork() {
         var targetLayer = layers[0];
         targetLayer.forEach(function(targetNeuron) {
             var currWeight = thicknessIndex < thicknesses.length ? thicknesses[thicknessIndex++] : initialThickness;
-            var edgeColor = currWeight < 0 ? "red" : "blue";
+            var edgeColor = thicknesses.length > 0 ? (currWeight < 0 ? "red" : "blue") : "gray";
             links.push({ source: source, target: targetNeuron, weight: Math.abs(currWeight), color: edgeColor });
         });
     });
@@ -204,10 +206,8 @@ layersSlider.oninput = function() {
     layersOutput.innerHTML = this.value;
 }
 
-function getIrisModelOutput(weights, num_of_links) {
-    thicknesses = []
-    numLinks = num_of_links
-    console.log(weights)
+function getIrisModelOutput(weights) {
+    thicknesses = [];
     for(let w of weights) {
         thicknesses.push(parseFloat(w));
     }
@@ -218,6 +218,11 @@ function getIrisModelOutput(weights, num_of_links) {
 document.getElementById("train").onclick = async function() {
     await eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML))(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
 }
+
+window.addEventListener('resize', function() {
+    svg.attr("width", window.innerWidth);
+    svg.attr("height", window.innerWidth / aspect);
+});
 
 // Initial update
 updateNetwork();

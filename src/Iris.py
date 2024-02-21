@@ -48,18 +48,15 @@ def train_model(model, X_train, y_train, X_val, y_val, epochs):
             for layer in range(len(self.model.layers)):
                 # Weights
                 w = model.layers[layer].get_weights()[0]
-                # Bias
-                # b = self.model.layers[layer].get_weights()[1]
-                # print(f"Layer {layer} has weights of shape {np.shape(w)}")
                 
                 for neuron in range(len(w)):
                     # Save weights and biases to dictionary
                     if epoch == 0:
                         # Create new array to hold weights and biases
-                        weight_dict[f"weight_{str(layer+1)}_{str(neuron+1)}"] = w[neuron]
+                        weight_dict[f"layer_{str(layer+1)}_neuron_{str(neuron+1)}"] = w[neuron]
                     else:
                         # Append new weights to existing array
-                        weight_dict[f"weight_{str(layer+1)}_{str(neuron+1)}"] = np.dstack((weight_dict[f"weight_{str(layer+1)}_{str(neuron+1)}"], w[neuron]))
+                        weight_dict[f"layer_{str(layer+1)}_neuron_{str(neuron+1)}"] = np.dstack((weight_dict[f"layer_{str(layer+1)}_neuron_{str(neuron+1)}"], w[neuron]))
 
     validation_accuracy = validationAccuracy()
     model.fit(X_train, y_train, epochs=epochs, validation_data=(X_val, y_val), callbacks=[validation_accuracy])
@@ -77,12 +74,12 @@ def plot_results(val_acc, epochs):
     plt.plot(range(epochs), val_acc)
     plt.show()
     
-def get_last_weights(weights):
+def get_last_weights(weights_dict):
     strengthArray = []
-    for key in weights:
+    for key in weights_dict:
         if(not(str(key).startswith("bias"))):
             # Get the weights from the last epoch
-            last_weights = weights[key][:, :, -1]
+            last_weights = weights_dict[key][:, :, -1]
             for lw in last_weights:
                 for w in lw:
                     strengthArray.append(float(w))
@@ -92,7 +89,7 @@ def buildModel(hidden_layers, neurons, epochs):
     X, y = load_data()
     X_train, X_test, X_val, y_train, y_test, y_val = preprocess_data(X, y)
     model = build_model(hidden_layers, neurons)
-    val_acc, weights = train_model(model, X_train, y_train, X_val, y_val, epochs)
+    val_acc, weights_dict = train_model(model, X_train, y_train, X_val, y_val, epochs)
     y_pred, loss, accuracy = evaluate_model(model, X_test, y_test)
     # plot_results(val_acc, epochs)
-    return get_last_weights(weights), val_acc, loss, accuracy, y_pred
+    return get_last_weights(weights_dict), val_acc, loss, accuracy, y_pred
