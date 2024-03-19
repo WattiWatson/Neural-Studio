@@ -1,5 +1,5 @@
 /*
-    JavaScript for site containing interface logic
+    JavaScript for site containing interface logic for CNN
 */
 
 // Define the dimensions of the SVG
@@ -7,8 +7,9 @@ var width = 1300;
 var height = 800;
 var initialThickness = 0.4;
 var thicknesses = [];
-var numInputNeurons = 4;
-var numOutputNeurons = 3;
+var numInputNeurons = 4; // Number of input neurons
+var numOutputNeurons = 3; // Number of output neurons
+const epochs = 100;
 
 // Set the initial zoom level of visual
 var initialZoom = 0.5;
@@ -212,11 +213,12 @@ function getIrisModelOutput(weights) {
         thicknesses.push(parseFloat(w));
     }
     updateNetwork();
+    // createLossGraph(val_acc, epochs);
 }
 
 // When train button is clicked, run python function passed with the values from sliders
 document.getElementById("train").onclick = async function() {
-    await eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML))(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
+    await eel.triggerBuildMNISTModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML), epochs)(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
 }
 
 window.addEventListener('resize', function() {

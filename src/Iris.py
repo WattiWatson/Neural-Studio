@@ -72,6 +72,7 @@ def evaluate_model(model, X_test, y_test):
 def plot_results(val_acc, epochs):
     plt.figure()
     plt.plot(range(epochs), val_acc)
+    plt.title("Accuracy Graph")
     plt.show()
     
 def get_last_weights(weights_dict):
@@ -91,5 +92,5 @@ def buildModel(hidden_layers, neurons, epochs):
     model = build_model(hidden_layers, neurons)
     val_acc, weights_dict = train_model(model, X_train, y_train, X_val, y_val, epochs)
     y_pred, loss, accuracy = evaluate_model(model, X_test, y_test)
-    # plot_results(val_acc, epochs)
+    plot_results(val_acc, epochs)
     return get_last_weights(weights_dict), val_acc, loss, accuracy, y_pred

@@ -11,6 +11,12 @@ class Neural_Studio:
         weights, val_acc, loss, accuracy, y_pred = Iris.buildModel(hidden_layer_count, neuron_array, training_epochs_count) # hidden_layers, neurons, training_epcohs
         return weights, val_acc, loss, accuracy, y_pred
     
+    def buildMNISTModel(self, hidden_layer_count, neuron_count, training_epochs_count):
+        import Iris
+        neuron_array = self.generateNeuronArray(hidden_layer_count, neuron_count)
+        weights, val_acc, loss, accuracy, y_pred = Iris.buildModel(hidden_layer_count, neuron_array, training_epochs_count) # hidden_layers, neurons, training_epcohs
+        return weights, val_acc, loss, accuracy, y_pred
+    
     def startApplication(self, width, height):
         GUI.loadFrontend(width, height)
 
