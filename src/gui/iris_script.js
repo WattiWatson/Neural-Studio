@@ -9,7 +9,10 @@ var initialThickness = 0.4;
 var thicknesses = [];
 var numInputNeurons = 4;
 var numOutputNeurons = 3;
+
 const epochs = 100;
+let val_acc = [];
+let ep = 0;
 
 // Set the initial zoom level of visual
 var initialZoom = 0.5;
@@ -87,13 +90,13 @@ function createLossGraph(val_acc, epochs) {
 
     // Add the line
     svg.append("path")
-        .datum(data)
+        .datum(val_acc)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-        .x(function(d) { return x(d.date) })
-        .y(function(d) { return y(d.value) })
+        .x(function(d) { return x(d.epochs) })
+        .y(function(d) { return y(d.val_acc) })
     )
 }
 
@@ -138,13 +141,13 @@ function updateNetwork() {
     // Calculate the number of links
     numLinks = (4 * numNeurons) + ((numLayers - 1) * (numNeurons * numNeurons)) + (3 * numNeurons);
 
-    console.log("Number of links: " + numLinks);
+    // console.log("Number of links: " + numLinks);
 
     // Keep track of the current thickness value
     var thicknessIndex = 0;
 
     // Create the links
-    console.log("Thicknesses length: " + thicknesses.length);
+    // console.log("Thicknesses length: " + thicknesses.length);
     var links = [];
     outputNeurons.forEach(function(neuron) {
         var source = neuron;
@@ -195,7 +198,7 @@ function updateNetwork() {
         return d.weight;
     });
 
-    console.log("Links drawn: " + links.length);
+    // console.log("Links drawn: " + links.length);
 
     // Create a tooltip
     var tooltip = d3.select("body").append("div")
@@ -249,17 +252,22 @@ layersSlider.oninput = function() {
     layersOutput.innerHTML = this.value;
 }
 
-function getIrisModelOutput(weights) {
+function getIrisModelOutput(tArr) {
     thicknesses = [];
-    for(let w of weights) {
+    for(let w of tArr[0]) {
         thicknesses.push(parseFloat(w));
     }
     updateNetwork();
+
+    val_acc = tArr[1]
+    ep = tArr[2]
     // createLossGraph(val_acc, epochs);
+    document.getElementById("train").removeAttribute("disabled");
 }
 
 // When train button is clicked, run python function passed with the values from sliders
 document.getElementById("train").onclick = async function() {
+    document.getElementById("train").setAttribute("disabled", "disabled");
     await eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML), epochs)(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
 }
 

@@ -11,13 +11,23 @@ NS = main.Neural_Studio()
 # Expose function to start model from JavaScript
 @eel.expose
 def triggerBuildIrisModel(hidden_layers, neurons, training_epochs):
-    weights, val_acc, loss, accuracy, y_pred = NS.buildIrisModel(hidden_layers, neurons, training_epochs)
-    return weights
-
+    tArr = []
+    weights, val_acc, epochs, loss, accuracy, y_pred = NS.buildIrisModel(hidden_layers, neurons, training_epochs)
+    tArr.append(weights)
+    tArr.append(val_acc)
+    tArr.append(epochs)
+    return tArr
 @eel.expose
-def triggerBuildMNISTModel(hidden_layers, neurons, training_epochs):
-    weights, val_acc, loss, accuracy, y_pred = NS.buildMNISTModel(hidden_layers, neurons, training_epochs)
-    return weights
+def triggerGetIrisValidationAccuracy():
+    return NS.getIrisValidationAccuracy
+@eel.expose
+def triggerGetIrisEpochs():
+    return NS.getIrisEpochs
+
+# @eel.expose
+# def triggerBuildMNISTModel(hidden_layers, neurons, training_epochs):
+#     weights, val_acc, epochs, loss, accuracy, y_pred = NS.buildMNISTModel(hidden_layers, neurons, training_epochs)
+#     return weights
 
 def loadFrontend(width, height):
     try:

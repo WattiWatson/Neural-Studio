@@ -93,4 +93,4 @@ def buildModel(hidden_layers, neurons, epochs):
     val_acc, weights_dict = train_model(model, X_train, y_train, X_val, y_val, epochs)
     y_pred, loss, accuracy = evaluate_model(model, X_test, y_test)
     plot_results(val_acc, epochs)
-    return get_last_weights(weights_dict), val_acc, loss, accuracy, y_pred
+    return get_last_weights(weights_dict), val_acc, epochs, loss, accuracy, y_pred
