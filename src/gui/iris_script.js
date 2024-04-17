@@ -276,5 +276,8 @@ window.addEventListener('resize', function() {
     svg.attr("height", window.innerWidth);
 });
 
+svg.attr("width", window.innerWidth);
+svg.attr("height", window.innerWidth);
+
 // Initial update
 updateNetwork();

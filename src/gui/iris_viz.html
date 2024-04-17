@@ -8,7 +8,7 @@
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background-color: #f8f8f8;
+            background-color: #481E14;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -38,6 +38,7 @@
         .slider-label {
             font-size: 14px;
             margin-bottom: 5px;
+            color: white;
         }
 
         .slider {
@@ -45,40 +46,59 @@
             height: 5px;
             border-radius: 5px;
             background: #ddd;
+            color: white;
             outline: none;
             opacity: 0.7;
             transition: opacity 0.2s;
         }
 
-        #train {
-            background-color: #cd6220;
-            color: #fff;
+        button {
+            background-color: #9B3922; /* Orange color for the buttons */
             border: none;
-            padding: 10px 20px;
+            color: white;
+            padding: 15px 30px; /* Larger padding for bigger buttons */
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            font-size: 16px;
+            font-size: 18px; /* Larger font size for better readability */
+            margin: 4px 2px;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            border-radius: 4px; /* Rounded corners for the buttons */
+        }
+        button:hover {
+            background-color: #F2613F; /* Darker orange color on hover */
+        }
+        a {
+            color: white; /* White text color for links */
+            text-decoration: none; /* No underline for links */
         }
 
-        #train:hover {
-            background-color: #e59627;
+        #backHome {
+            justify-content: center;
+            position: fixed;
+            left: 0;
+            margin-left: 10px;
+            background-color: #9B3922; /* Match the body background color */
+            color: white;
+            text-align: left; /* Align the text to the left */
+        }
+        #backHome:hover {
+            background-color: #F2613F; /* Darker orange color on hover */
         }
     </style>
 </head>
 <body>
-    <div id="network_visualization" style="background-color: #f0f0f0;">
+    <div id="network_visualization" style="background-color: white;">
         <!-- Neural Network visualization will go here -->
     </div>
 
-    <div id="loss_graph" style="background-color: #f0f0f0;">
+    <div id="accuracy_graph" style="background-color: white;">
         <!-- Loss Graph will go here -->
     </div>
 
     <div class="controls">
+        <button id="backHome"><a href="index.html">Home</a></button>
+
         <div class="control-group">
             <div class="slider-label">Number of Neurons: <span id="neurons_val">1</span></div>
             <input type="range" min="1" max="8" value="1" class="slider" id="neurons">

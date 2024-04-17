@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+    <title>Neural Studio</title>
+    <style>
+        body {
+            background-color: #481E14; /* Dark brown background for a modern look */
+            font-family: 'Arial', sans-serif; /* Modern font */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #fff; /* White color for the title */
+            margin-top: 20px; /* Added space at the top */
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center; /* Centered title */
+        }
+        img {
+            border-radius: 8px; /* Rounded corners for the logo */
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: #9B3922; /* Orange color for the buttons */
+            border: none;
+            color: white;
+            padding: 15px 30px; /* Larger padding for bigger buttons */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px; /* Larger font size for better readability */
+            margin: 12px 6px;
+            cursor: pointer;
+            border-radius: 4px; /* Rounded corners for the buttons */
+        }
+        .button:hover {
+            background-color: #F2613F; /* Darker orange color on hover */
+        }
+        .button:disabled {
+            background-color: #555; /* Gray background */
+            cursor: not-allowed; /* Shows a 'no entry' cursor on hover */
+            border: 1px solid #222; /* Darker border */
+        }
+        .button:disabled:hover {
+            background-color: #444; /* Slightly lighter gray background on hover */
+        }
+
+        a {
+            color: white; /* White text color for links */
+            text-decoration: none; /* No underline for links */
+        }
+
+        footer {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Neural Studio</h1>
+    <img src="imgs/netron-logo.png" alt="Netron Logo" width="533.5" height="353">
+    <button class="button"><a href="iris_viz.html">Iris Data Set</a></button>
+    <button class="button" disabled title="Page under construction"><a href="#" tabindex="-1" style="pointer-events: none;">MNIST Data Set</a></button>
+
+    <footer style="padding: 20px; text-align: center;">
+        <a href="https://wattiwatson.github.io/Neural-Studio/" target="_blank">Website</a> |
+        <a href="https://github.com/WattiWatson/Neural-Studio" target="_blank">Github</a>
+        <!-- <a href="#" target="_blank">User Manual</a> -->
+    </footer>
+</body>
+<script type="text/javascript" src="/eel.js"></script>
+</html>

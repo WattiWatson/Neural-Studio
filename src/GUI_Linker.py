@@ -32,7 +32,7 @@ def triggerGetIrisEpochs():
 def loadFrontend(width, height):
     try:
         # Try to start application using Chrome
-        eel.start("iris_viz.html", size=(width, height))
+        eel.start("index.html", size=(width, height))
     except EnvironmentError:
         # If Chrome is not installed, fallback to default browser
-        eel.start("iris_viz.html", size=(width, height), mode='default')
+        eel.start("index.html", size=(width, height), mode='default')
