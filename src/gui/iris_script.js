@@ -108,6 +108,7 @@ function updateNetwork() {
     // Get the number of neurons and layers from the sliders
     var numNeurons = document.getElementById("neurons").value;
     var numLayers = document.getElementById("layers").value;
+    var numEpochs = document.getElementById("epochs_input").value;
 
     // Adjust the gap based on the number of layers
     var gap = width / (2.5 * numLayers + 1);
@@ -252,6 +253,15 @@ layersSlider.oninput = function() {
     layersOutput.innerHTML = this.value;
 }
 
+// Get epoch slider
+let epochsSlider = document.getElementById("epochs_input");
+let epochsOutput = document.getElementById("epochs_val");
+epochsOutput.innerHTML = epochsSlider.value;
+// Update epochs count when slider is moved
+epochsSlider.oninput = function() {
+    epochsOutput.innerHTML = this.value;
+}
+
 function getIrisModelOutput(tArr) {
     thicknesses = [];
     for(let w of tArr[0]) {
@@ -267,8 +277,9 @@ function getIrisModelOutput(tArr) {
 
 // When train button is clicked, run python function passed with the values from sliders
 document.getElementById("train").onclick = async function() {
+    console.log("Epochs: " + parseInt(epochsOutput.innerHTML));
     document.getElementById("train").setAttribute("disabled", "disabled");
-    await eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML), epochs)(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
+    await eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML), parseInt(epochsOutput.innerHTML))(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
 }
 
 window.addEventListener('resize', function() {

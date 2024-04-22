@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+    <link rel="icon" type="image/x-icon" href="/imgs/netron-favicon-t.png">
     <title>Neural Network GUI</title>
     <style>
         body {
@@ -100,13 +101,18 @@
         <button id="backHome"><a href="index.html">Home</a></button>
 
         <div class="control-group">
-            <div class="slider-label">Number of Neurons: <span id="neurons_val">1</span></div>
-            <input type="range" min="1" max="8" value="1" class="slider" id="neurons">
+            <div class="slider-label">Number of Neurons: <span id="neurons_val">2</span></div>
+            <input type="range" min="1" max="8" value="2" class="slider" id="neurons">
         </div>
 
         <div class="control-group">
             <div class="slider-label">Number of Hidden Layers: <span id="layers_val">1</span></div>
             <input type="range" min="1" max="8" value="1" class="slider" id="layers">
+        </div>
+
+        <div class="control-group">
+            <div class="slider-label">Number of Training Epochs: <span id="epochs_val">50</span></div>
+            <input type="range" min="50" max="150" value="100" step="50" class="slider" id="epochs_input">
         </div>
 
         <button id="train">Train</button>
