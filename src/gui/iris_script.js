@@ -9,7 +9,13 @@ var initialThickness = 0.4;
 var thicknesses = [];
 var numInputNeurons = 4;
 var numOutputNeurons = 3;
+
 const epochs = 100;
+let val_acc = [];
+let ep = 0;
+let loss = 0;
+let acc = 0;
+let w_dict = {};
 
 // Set the initial zoom level of visual
 var initialZoom = 0.5;
@@ -87,13 +93,13 @@ function createLossGraph(val_acc, epochs) {
 
     // Add the line
     svg.append("path")
-        .datum(data)
+        .datum(val_acc)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-        .x(function(d) { return x(d.date) })
-        .y(function(d) { return y(d.value) })
+        .x(function(d) { return x(d.epochs) })
+        .y(function(d) { return y(d.val_acc) })
     )
 }
 
@@ -105,6 +111,7 @@ function updateNetwork() {
     // Get the number of neurons and layers from the sliders
     var numNeurons = document.getElementById("neurons").value;
     var numLayers = document.getElementById("layers").value;
+    var numEpochs = document.getElementById("epochs_input").value;
 
     // Adjust the gap based on the number of layers
     var gap = width / (2.5 * numLayers + 1);
@@ -138,13 +145,13 @@ function updateNetwork() {
     // Calculate the number of links
     numLinks = (4 * numNeurons) + ((numLayers - 1) * (numNeurons * numNeurons)) + (3 * numNeurons);
 
-    console.log("Number of links: " + numLinks);
+    // console.log("Number of links: " + numLinks);
 
     // Keep track of the current thickness value
     var thicknessIndex = 0;
 
     // Create the links
-    console.log("Thicknesses length: " + thicknesses.length);
+    // console.log("Thicknesses length: " + thicknesses.length);
     var links = [];
     outputNeurons.forEach(function(neuron) {
         var source = neuron;
@@ -195,7 +202,7 @@ function updateNetwork() {
         return d.weight;
     });
 
-    console.log("Links drawn: " + links.length);
+    // console.log("Links drawn: " + links.length);
 
     // Create a tooltip
     var tooltip = d3.select("body").append("div")
@@ -249,24 +256,77 @@ layersSlider.oninput = function() {
     layersOutput.innerHTML = this.value;
 }
 
-function getIrisModelOutput(weights) {
+// Get epoch slider
+let epochsSlider = document.getElementById("epochs_input");
+let epochsOutput = document.getElementById("epochs_val");
+epochsOutput.innerHTML = epochsSlider.value;
+// Update epochs count when slider is moved
+epochsSlider.oninput = function() {
+    epochsOutput.innerHTML = this.value;
+}
+
+// Get current epoch slider
+// let currEpochsSlider = document.getElementById("curr_epochs");
+// let currEpochsOutput = document.getElementById("curr_epochs_val");
+// currEpochsOutput.innerHTML = currEpochsSlider.value;
+// // Update current epochs count when slider is moved
+// currEpochsSlider.oninput = function() {
+//     currEpochsOutput.innerHTML = this.value;
+//     // if(w_dict != {}) {
+//     //     eel.get_epoch_weights(w_dict, parseInt(currEpochsOutput.innerHTML))(reupdateVisual);
+//     // }
+// }
+
+function getIrisModelOutput(tArr) {
     thicknesses = [];
-    for(let w of weights) {
+    for(let w of tArr[0]) {
         thicknesses.push(parseFloat(w));
     }
     updateNetwork();
+
+    val_acc = tArr[1];
+    acc = tArr[2];
+    loss = tArr[3];
+    ep = tArr[4];
+    w_dict = tArr[5];
+
     // createLossGraph(val_acc, epochs);
+
+    // Set metrics
+    document.getElementById("ta-metrics").value = `Accuracy: ${acc.toFixed(2)}%\nLoss:     ${loss.toFixed(2)}%`;
+
+    // Enable slider
+    // currEpochsSlider.removeAttribute("disabled");
+
+    // Set value to epoch
+    // currEpochsSlider.max = ep;
+    // currEpochsSlider[0].value = ep;
+
+    document.getElementById("train").removeAttribute("disabled");
 }
+
+// function reupdateVisual(strengthArr) {
+//     thicknesses = [];
+//     for(let w of strengthArr) {
+//         thicknesses.push(parseFloat(w));
+//     }
+//     updateNetwork();
+// }
 
 // When train button is clicked, run python function passed with the values from sliders
 document.getElementById("train").onclick = async function() {
-    await eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML), epochs)(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
+    console.log("Epochs: " + parseInt(epochsOutput.innerHTML));
+    document.getElementById("train").setAttribute("disabled", "disabled");
+    await eel.triggerBuildIrisModel(parseInt(layersOutput.innerHTML), parseInt(neuronsOutput.innerHTML), parseInt(epochsOutput.innerHTML))(getIrisModelOutput); // Uses the output from the trigger function to call the getIrisModelOutput function
 }
 
 window.addEventListener('resize', function() {
     svg.attr("width", window.innerWidth);
     svg.attr("height", window.innerWidth);
 });
+
+svg.attr("width", window.innerWidth);
+svg.attr("height", window.innerWidth);
 
 // Initial update
 updateNetwork();

@@ -1,6 +1,7 @@
 from sklearn import datasets
 import numpy as np
 import os
+import eel
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from sklearn.model_selection import train_test_split
@@ -86,6 +87,18 @@ def get_last_weights(weights_dict):
                     strengthArray.append(float(w))
     return strengthArray
 
+@eel.expose
+def get_epoch_weights(weights_dict, curr_epoch):
+    strengthArray = []
+    for key in weights_dict:
+        if(not(str(key).startswith("bias"))):
+            # Get the weights from the last epoch
+            curr_weights = weights_dict[key][:, :, curr_epoch]
+            for cw in curr_weights:
+                for w in cw:
+                    strengthArray.append(float(w))
+    return strengthArray
+
 def buildModel(hidden_layers, neurons, epochs):
     X, y = load_data()
     X_train, X_test, X_val, y_train, y_test, y_val = preprocess_data(X, y)
@@ -93,4 +106,4 @@ def buildModel(hidden_layers, neurons, epochs):
     val_acc, weights_dict = train_model(model, X_train, y_train, X_val, y_val, epochs)
     y_pred, loss, accuracy = evaluate_model(model, X_test, y_test)
     plot_results(val_acc, epochs)
-    return get_last_weights(weights_dict), val_acc, loss, accuracy, y_pred
+    return get_last_weights(weights_dict), val_acc, epochs, loss, accuracy, y_pred, weights_dict

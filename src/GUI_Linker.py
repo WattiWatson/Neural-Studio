@@ -11,18 +11,31 @@ NS = main.Neural_Studio()
 # Expose function to start model from JavaScript
 @eel.expose
 def triggerBuildIrisModel(hidden_layers, neurons, training_epochs):
-    weights, val_acc, loss, accuracy, y_pred = NS.buildIrisModel(hidden_layers, neurons, training_epochs)
-    return weights
-
+    tArr = []
+    weights, val_acc, epochs, loss, accuracy, y_pred, weights_dict = NS.buildIrisModel(hidden_layers, neurons, training_epochs)
+    tArr.append(weights)
+    tArr.append(val_acc)
+    tArr.append(accuracy)
+    tArr.append(loss)
+    tArr.append(epochs)
+    tArr.append(weights_dict)
+    return tArr
 @eel.expose
-def triggerBuildMNISTModel(hidden_layers, neurons, training_epochs):
-    weights, val_acc, loss, accuracy, y_pred = NS.buildMNISTModel(hidden_layers, neurons, training_epochs)
-    return weights
+def triggerGetIrisValidationAccuracy():
+    return NS.getIrisValidationAccuracy
+@eel.expose
+def triggerGetIrisEpochs():
+    return NS.getIrisEpochs
+
+# @eel.expose
+# def triggerBuildMNISTModel(hidden_layers, neurons, training_epochs):
+#     weights, val_acc, epochs, loss, accuracy, y_pred = NS.buildMNISTModel(hidden_layers, neurons, training_epochs)
+#     return weights
 
 def loadFrontend(width, height):
     try:
         # Try to start application using Chrome
-        eel.start("iris_viz.html", size=(width, height))
+        eel.start("index.html", size=(width, height))
     except EnvironmentError:
         # If Chrome is not installed, fallback to default browser
-        eel.start("iris_viz.html", size=(width, height), mode='default')
+        eel.start("index.html", size=(width, height), mode='default')

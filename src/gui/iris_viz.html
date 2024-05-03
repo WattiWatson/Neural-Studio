@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+    <link rel="icon" type="image/x-icon" href="/imgs/netron-favicon-t.png">
     <title>Neural Network GUI</title>
     <style>
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
+            background-color: #481E14;
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,6 +30,8 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
+            margin-left: 80px;
+            width: 90%;
         }
 
         .control-group {
@@ -38,6 +41,7 @@
         .slider-label {
             font-size: 14px;
             margin-bottom: 5px;
+            color: white;
         }
 
         .slider {
@@ -45,43 +49,75 @@
             height: 5px;
             border-radius: 5px;
             background: #ddd;
+            color: white;
             outline: none;
             opacity: 0.7;
             transition: opacity 0.2s;
         }
 
-        #train {
-            background-color: #cd6220;
-            color: #fff;
+        textarea {
+            background-color: #481E14;
+            color: white;
+            resize: none;
+            margin-left: 75px;
+            padding: 5px;
+        }
+
+        button {
+            background-color: #9B3922; /* Orange color for the buttons */
             border: none;
-            padding: 10px 20px;
+            color: white;
+            padding: 15px 30px; /* Larger padding for bigger buttons */
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            font-size: 16px;
+            font-size: 18px; /* Larger font size for better readability */
+            margin: 4px 2px;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            border-radius: 4px; /* Rounded corners for the buttons */
+        }
+        button:hover {
+            background-color: #F2613F; /* Darker orange color on hover */
         }
 
-        #train:hover {
-            background-color: #e59627;
+        #train {
+            margin-left: 10px;
+        }
+
+        a {
+            color: white; /* White text color for links */
+            text-decoration: none; /* No underline for links */
+        }
+
+        #backHome {
+            justify-content: center;
+            position: fixed;
+            left: 0;
+            margin-left: 10px;
+            background-color: #9B3922; /* Match the body background color */
+            color: white;
+            text-align: left; /* Align the text to the left */
+        }
+        #backHome:hover {
+            background-color: #F2613F; /* Darker orange color on hover */
         }
     </style>
 </head>
 <body>
-    <div id="network_visualization" style="background-color: #f0f0f0;">
+    <div id="network_visualization" style="background-color: white;">
         <!-- Neural Network visualization will go here -->
     </div>
 
-    <div id="loss_graph" style="background-color: #f0f0f0;">
+    <div id="accuracy_graph" style="background-color: white;">
         <!-- Loss Graph will go here -->
     </div>
 
     <div class="controls">
+        <button id="backHome"><a href="index.html">Home</a></button>
+
         <div class="control-group">
-            <div class="slider-label">Number of Neurons: <span id="neurons_val">1</span></div>
-            <input type="range" min="1" max="8" value="1" class="slider" id="neurons">
+            <div class="slider-label">Number of Neurons: <span id="neurons_val">2</span></div>
+            <input type="range" min="1" max="8" value="2" class="slider" id="neurons">
         </div>
 
         <div class="control-group">
@@ -89,7 +125,24 @@
             <input type="range" min="1" max="8" value="1" class="slider" id="layers">
         </div>
 
+        <div class="control-group">
+            <div class="slider-label">Number of Training Epochs: <span id="epochs_val">50</span></div>
+            <input type="range" min="50" max="150" value="100" step="50" class="slider" id="epochs_input">
+        </div>
+
+        <!-- <div class="control-group">
+            <div class="slider-label">Current Epoch: <span id="curr_epochs_val">0</span></div>
+            <input type="range" min="0" max="100" value="0" step="10" class="slider" id="curr_epochs" disabled>
+        </div> -->
+
         <button id="train">Train</button>
+
+        <div class="control-group">
+            <textarea id="ta-metrics" rows="5" cols="15" readonly>
+                Accuracy: 0%
+                Loss:     0%
+            </textarea>
+        </div>
     </div>
     <script src="/d3.v6.min.js"></script>
     <script type="text/javascript" src="/eel.js"></script>

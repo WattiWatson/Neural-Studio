@@ -2,20 +2,32 @@ import GUI_Linker as GUI
 import numpy as np
 
 class Neural_Studio:
+    
+    global weights
+    global val_acc
+    global epochs
+    global loss
+    global accuracy
+    global y_pred
+    
     def generateNeuronArray(self, hidden_layer_count, neuron_count):
         return [neuron_count] * hidden_layer_count
     
     def buildIrisModel(self, hidden_layer_count, neuron_count, training_epochs_count):
         import Iris
         neuron_array = self.generateNeuronArray(hidden_layer_count, neuron_count)
-        weights, val_acc, loss, accuracy, y_pred = Iris.buildModel(hidden_layer_count, neuron_array, training_epochs_count) # hidden_layers, neurons, training_epcohs
-        return weights, val_acc, loss, accuracy, y_pred
+        weights, val_acc, epochs, loss, accuracy, y_pred, weights_dict = Iris.buildModel(hidden_layer_count, neuron_array, training_epochs_count) # hidden_layers, neurons, training_epcohs 
+        return weights, val_acc, epochs, loss, accuracy, y_pred, weights_dict
+    
+    def getIrisValidationAccuracy():
+        va = val_acc
+        return va
+    
+    def getIrisEpochs():
+        return int(epochs)
     
     def buildMNISTModel(self, hidden_layer_count, neuron_count, training_epochs_count):
-        import Iris
-        neuron_array = self.generateNeuronArray(hidden_layer_count, neuron_count)
-        weights, val_acc, loss, accuracy, y_pred = Iris.buildModel(hidden_layer_count, neuron_array, training_epochs_count) # hidden_layers, neurons, training_epcohs
-        return weights, val_acc, loss, accuracy, y_pred
+        pass
     
     def startApplication(self, width, height):
         GUI.loadFrontend(width, height)
