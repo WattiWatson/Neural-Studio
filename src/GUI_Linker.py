@@ -12,10 +12,13 @@ NS = main.Neural_Studio()
 @eel.expose
 def triggerBuildIrisModel(hidden_layers, neurons, training_epochs):
     tArr = []
-    weights, val_acc, epochs, loss, accuracy, y_pred = NS.buildIrisModel(hidden_layers, neurons, training_epochs)
+    weights, val_acc, epochs, loss, accuracy, y_pred, weights_dict = NS.buildIrisModel(hidden_layers, neurons, training_epochs)
     tArr.append(weights)
     tArr.append(val_acc)
+    tArr.append(accuracy)
+    tArr.append(loss)
     tArr.append(epochs)
+    tArr.append(weights_dict)
     return tArr
 @eel.expose
 def triggerGetIrisValidationAccuracy():

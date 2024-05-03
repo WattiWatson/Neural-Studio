@@ -10,7 +10,7 @@
             margin: 0;
             font-family: 'Arial', sans-serif;
             background-color: #481E14;
-            color: #333;
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -30,6 +30,8 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
+            margin-left: 80px;
+            width: 90%;
         }
 
         .control-group {
@@ -53,6 +55,14 @@
             transition: opacity 0.2s;
         }
 
+        textarea {
+            background-color: #481E14;
+            color: white;
+            resize: none;
+            margin-left: 75px;
+            padding: 5px;
+        }
+
         button {
             background-color: #9B3922; /* Orange color for the buttons */
             border: none;
@@ -69,6 +79,11 @@
         button:hover {
             background-color: #F2613F; /* Darker orange color on hover */
         }
+
+        #train {
+            margin-left: 10px;
+        }
+
         a {
             color: white; /* White text color for links */
             text-decoration: none; /* No underline for links */
@@ -115,7 +130,19 @@
             <input type="range" min="50" max="150" value="100" step="50" class="slider" id="epochs_input">
         </div>
 
+        <!-- <div class="control-group">
+            <div class="slider-label">Current Epoch: <span id="curr_epochs_val">0</span></div>
+            <input type="range" min="0" max="100" value="0" step="10" class="slider" id="curr_epochs" disabled>
+        </div> -->
+
         <button id="train">Train</button>
+
+        <div class="control-group">
+            <textarea id="ta-metrics" rows="5" cols="15" readonly>
+                Accuracy: 0%
+                Loss:     0%
+            </textarea>
+        </div>
     </div>
     <script src="/d3.v6.min.js"></script>
     <script type="text/javascript" src="/eel.js"></script>

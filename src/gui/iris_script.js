@@ -13,6 +13,9 @@ var numOutputNeurons = 3;
 const epochs = 100;
 let val_acc = [];
 let ep = 0;
+let loss = 0;
+let acc = 0;
+let w_dict = {};
 
 // Set the initial zoom level of visual
 var initialZoom = 0.5;
@@ -262,6 +265,18 @@ epochsSlider.oninput = function() {
     epochsOutput.innerHTML = this.value;
 }
 
+// Get current epoch slider
+// let currEpochsSlider = document.getElementById("curr_epochs");
+// let currEpochsOutput = document.getElementById("curr_epochs_val");
+// currEpochsOutput.innerHTML = currEpochsSlider.value;
+// // Update current epochs count when slider is moved
+// currEpochsSlider.oninput = function() {
+//     currEpochsOutput.innerHTML = this.value;
+//     // if(w_dict != {}) {
+//     //     eel.get_epoch_weights(w_dict, parseInt(currEpochsOutput.innerHTML))(reupdateVisual);
+//     // }
+// }
+
 function getIrisModelOutput(tArr) {
     thicknesses = [];
     for(let w of tArr[0]) {
@@ -269,11 +284,34 @@ function getIrisModelOutput(tArr) {
     }
     updateNetwork();
 
-    val_acc = tArr[1]
-    ep = tArr[2]
+    val_acc = tArr[1];
+    acc = tArr[2];
+    loss = tArr[3];
+    ep = tArr[4];
+    w_dict = tArr[5];
+
     // createLossGraph(val_acc, epochs);
+
+    // Set metrics
+    document.getElementById("ta-metrics").value = `Accuracy: ${acc.toFixed(2)}%\nLoss:     ${loss.toFixed(2)}%`;
+
+    // Enable slider
+    // currEpochsSlider.removeAttribute("disabled");
+
+    // Set value to epoch
+    // currEpochsSlider.max = ep;
+    // currEpochsSlider[0].value = ep;
+
     document.getElementById("train").removeAttribute("disabled");
 }
+
+// function reupdateVisual(strengthArr) {
+//     thicknesses = [];
+//     for(let w of strengthArr) {
+//         thicknesses.push(parseFloat(w));
+//     }
+//     updateNetwork();
+// }
 
 // When train button is clicked, run python function passed with the values from sliders
 document.getElementById("train").onclick = async function() {

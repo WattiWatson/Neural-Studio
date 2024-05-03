@@ -16,8 +16,8 @@ class Neural_Studio:
     def buildIrisModel(self, hidden_layer_count, neuron_count, training_epochs_count):
         import Iris
         neuron_array = self.generateNeuronArray(hidden_layer_count, neuron_count)
-        weights, val_acc, epochs, loss, accuracy, y_pred = Iris.buildModel(hidden_layer_count, neuron_array, training_epochs_count) # hidden_layers, neurons, training_epcohs 
-        return weights, val_acc, epochs, loss, accuracy, y_pred
+        weights, val_acc, epochs, loss, accuracy, y_pred, weights_dict = Iris.buildModel(hidden_layer_count, neuron_array, training_epochs_count) # hidden_layers, neurons, training_epcohs 
+        return weights, val_acc, epochs, loss, accuracy, y_pred, weights_dict
     
     def getIrisValidationAccuracy():
         va = val_acc
